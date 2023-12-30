@@ -7,4 +7,4 @@ class MyUser(HttpUser):
 
     @task
     def my_task(self):
-        print(f"Current user count: {self.user_count}")
+        print(f"Current user count: {self.environment.runner.user_count}")
