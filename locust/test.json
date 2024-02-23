@@ -1,0 +1,14 @@
+{
+  "args": {},
+  "data": {
+    "foo": 1
+  },
+  "files": {},
+  "form": {},
+  "headers": {
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "host": "postman-echo.com",
+    "x-amzn-t": "dd"
+  }
+}
