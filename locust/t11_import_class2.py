@@ -16,7 +16,7 @@ class MyThirdHttpUser(HttpUser):
 if __name__ == "__main__":
     import sys
     from locust.main import main
-    sys.argv = ['locust', '-f', __file__, '--headless', '-u', '1', '-r', '10', '--only-summary']
+    sys.argv = ['locust', '-f', __file__, '--headless', '-u', '1', '-r', '10', '--only-summary', '--host', 'www.example.com']
     # sys.argv = ['locust', '-f', __file__, '--headless', '-u', '1', '-r', '10', '--only-summary', 'MyThirdHttpUser']
     # sys.argv = ['locust', '-f', __file__, '--headless', '-u', '1', '-r', '10', '-t', '1m', '--only-summary', 'MyThirdHttpUser']
     main()
