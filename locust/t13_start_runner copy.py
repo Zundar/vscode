@@ -11,12 +11,14 @@ setup_logging("INFO", None)
 logger = logging.getLogger(__name__)
 
 class MyHttpUser(HttpUser):
-    wait_time = between(1, 3)
-    host = "http://your-testing-url.com"  # Установите ваш базовый URL
+    wait_time = between(3, 5)
+    host = "http://google.com"  # Установите ваш базовый URL
 
     @task
     def my_task(self):
-        print("my_task")  # Пример запроса
+        r = self.client.get("/")  # Пример запроса
+        logger.warning((f"==>> r: {r}", "green"))
+
 
 
 if __name__ == "__main__":
@@ -26,7 +28,7 @@ if __name__ == "__main__":
 
     try:
         # Запуск генерации нагрузки (например, 10 пользователей с скоростью 2 новых пользователя в секунду)
-        runner.start(user_count=6, spawn_rate=2)
+        runner.start(user_count=10, spawn_rate=2)
 
         # Работаем 10 секунд
         gevent.sleep(10)
@@ -39,6 +41,10 @@ if __name__ == "__main__":
         runner.quit()
 
         # Логирование общей статистики
-        logger.info("Number of requests: %d", env.stats.total.num_requests)
-        logger.info("Number of failures: %d", env.stats.total.num_failures)
-        logger.info("Total average response time: %d", env.stats.total.avg_response_time)
+        stats = env.stats.total
+        logger.info("Number of requests: %d", stats.num_requests)
+        logger.info("Number of failures: %d", stats.num_failures)
+        logger.info("Total average response time: %.2f ms", stats.avg_response_time)
+        logger.info("Total median response time: %.2f ms", stats.median_response_time)
+        logger.info("Total min response time: %.2f ms", stats.min_response_time)
+        logger.info("Total max response time: %.2f ms", stats.max_response_time)
