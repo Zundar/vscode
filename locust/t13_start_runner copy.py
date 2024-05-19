@@ -11,7 +11,7 @@ setup_logging("INFO", None)
 logger = logging.getLogger(__name__)
 
 class MyHttpUser(HttpUser):
-    wait_time = between(3, 5)
+    wait_time = between(6, 7)
     host = "http://google.com"  # Установите ваш базовый URL
 
     @task
@@ -20,18 +20,23 @@ class MyHttpUser(HttpUser):
         logger.warning((f"==>> r: {r}", "green"))
 
 
-
 if __name__ == "__main__":
     # Создаем окружение с нашими пользовательскими классами
     env = Environment(user_classes=[MyHttpUser])
     runner = LocalRunner(env)
 
     try:
-        # Запуск генерации нагрузки (например, 10 пользователей с скоростью 2 новых пользователя в секунду)
-        runner.start(user_count=10, spawn_rate=2)
+        # Ступени по нагрузке
+        stages = [
+            (10, 2, 10),  # (пользователи, скорость создания, время в секундах)
+            (20, 5, 20),
+            (30, 10, 30)
+        ]
 
-        # Работаем 10 секунд
-        gevent.sleep(10)
+        for user_count, spawn_rate, duration in stages:
+            logger.info(f"Запуск {user_count} пользователей с скоростью {spawn_rate} пользователей в секунду на {duration} секунд")
+            runner.start(user_count=user_count, spawn_rate=spawn_rate)
+            gevent.sleep(duration)
 
     except LocustError as e:
         logger.error("LocustError: %s", e)
